@@ -5,7 +5,7 @@
   "homepage": "https://github.com/gdandar/Knockout-Parsley",
   "dependencies": {
     "underscore": "~1.4.4"
-  }
+  },
   "keywords": [
     "util",
     "knockout",
