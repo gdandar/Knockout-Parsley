@@ -1,0 +1,39 @@
+{
+  "name": "knockout-parsley",
+  "version": "0.0.9",
+  "description": "Parsley validation for Knockout JS.",
+  "homepage": "https://github.com/gdandar/Knockout-Parsley",
+  "keywords": [
+    "util",
+    "knockout",
+    "parsley",
+    "validation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gdandar/Knockout-Parsley.git"
+  },
+  "bugs": {
+    "url": "http://github.com/gdandar/Knockout-Parsley/issues"
+  },
+  "author": {
+    "name": "Gabor Dandar",
+    "email": "dandarg@gmail.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "Knockout-Parsley.js",
+  "scripts": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2"
+  },
+  "readme": "README.md",
+  "readmeFilename": "README.md",
+  "_id": "Knockout-Parsley@0.0.9"
+}
