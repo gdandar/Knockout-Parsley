@@ -5,6 +5,25 @@ ko.parsley = {};
 	var mainForm;
 	//Register the 'validatable' Knockout extender, and the 'validationCore' binding handler for validatable observables
 	function initKoAddons() {
+		var nativeForEach = Array.prototype.forEach;
+		var isArray = Array.isArray || function(obj) {
+			return toString.call(obj) == '[object Array]';
+		};
+		var each = function(obj, iterator, context) {
+			if (obj === null) return;
+			if (nativeForEach && obj.forEach === nativeForEach) {
+				obj.forEach(iterator, context);
+			} else if ( isArray(obj) ) {
+				for (var i = 0, l = obj.length; i < l; i++) {
+					if (iterator.call(context, obj[i], i, obj) === breaker) return;
+				}
+			} else {
+				for (var key in obj) {
+					if (iterator.call(context, obj[key], key, obj) === breaker) return;
+				}
+			}
+		};
+
 		//Extender that makes the observable ready for validate. (Inserts an observableArray into the observable for the validation rules)
 		//Each rule in the rules array must have the following structure:
 		//	{
@@ -33,7 +52,7 @@ ko.parsley = {};
 				var obs = valueAccessor();
 				if(obs.rules) {
 					var parsleyField = $( element).parsley();
-					_.each( obs.rules(), function(rule, key, list) {
+					each( obs.rules(), function(rule, key, list) {
 
 						var parsleyAttrName = "data-" + rule.rule;
 						var attr = $(element).attr(parsleyAttrName);
@@ -45,11 +64,11 @@ ko.parsley = {};
 								$(element).parsley('removeConstraint', rule.rule);
 							} else {
 								addParsleyConstraint(parsleyField, rule);
-								$(mainForm).parsley('addItem', element);	
+								$(mainForm).parsley('addItem', element);
 							}
 						}
-					});  
-				}          
+					});
+				}
 			}
 		};
 	}
@@ -64,9 +83,9 @@ ko.parsley = {};
 				}
 
 				return target;
-			};	
+			};
 		}
-	}	
+	}
 
 	function addParsleyConstraint(parsleyField, rule) {
 		var name = rule.rule.toLowerCase();	
@@ -111,7 +130,7 @@ ko.parsley = {};
 		mainForm = _mainForm;
 		initKoAddons();
 
-		_.each( allowedRules, function(value, key, list) {
+		each( allowedRules, function(value, key, list) {
 			addExtender(value);
 		});
 		overrideBinding('value');
