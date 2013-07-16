@@ -1,77 +1,88 @@
-ko.parsley = {};
-
+/// Knockout Parsley validation plugin v0.1.0
+/// (c) 2013 Gabor Dandar
+/// License: MIT (http://www.opensource.org/licenses/mit-license.php)
 (function(){
 	var allowedRules = ['required','notblank', 'minlength', 'maxlength', 'rangelength', 'min', 'max', 'regexp', 'range',  'type'];
 	var mainForm;
+	
+	var parsley = {};
+	ko.parsley = parsley;
+
+	var util = (function(){
+		return {
+			nativeForEach: Array.prototype.forEach,
+
+			isArray: Array.isArray || function(obj) {
+				return toString.call(obj) == '[object Array]';
+			},
+
+			each: function(obj, iterator, context) {
+				if (obj === null) return;
+				if (util.nativeForEach && obj.forEach === util.nativeForEach) {
+					obj.forEach(iterator, context);
+				} else if ( util.isArray(obj) ) {
+					for (var i = 0, l = obj.length; i < l; i++) {
+						if (iterator.call(context, obj[i], i, obj) === breaker) return;
+					}
+				} else {
+					for (var key in obj) {
+						if (iterator.call(context, obj[key], key, obj) === breaker) return;
+					}
+				}
+			}
+		};
+	}());
+
 	//Register the 'validatable' Knockout extender, and the 'validationCore' binding handler for validatable observables
-	function initKoAddons() {
-		var nativeForEach = Array.prototype.forEach;
-		var isArray = Array.isArray || function(obj) {
-			return toString.call(obj) == '[object Array]';
-		};
-		var each = function(obj, iterator, context) {
-			if (obj === null) return;
-			if (nativeForEach && obj.forEach === nativeForEach) {
-				obj.forEach(iterator, context);
-			} else if ( isArray(obj) ) {
-				for (var i = 0, l = obj.length; i < l; i++) {
-					if (iterator.call(context, obj[i], i, obj) === breaker) return;
-				}
-			} else {
-				for (var key in obj) {
-					if (iterator.call(context, obj[key], key, obj) === breaker) return;
-				}
-			}
-		};
-
-		//Extender that makes the observable ready for validate. (Inserts an observableArray into the observable for the validation rules)
-		//Each rule in the rules array must have the following structure:
-		//	{
-		//		rule: <name of the rule>,
-		//		params: <rule parameters>,
-		//		message: <custom message if the validation fails>,
-		//		condition: <function returning  a boolean value, if the returned value is false, the validation will not apply>
-		//	}
-		//	{
-		//		rule: 'minlength',
-		//		params: 12,
-		//		message: 'This is too short!',
-		//		condition: function() { 
-		//			return myGroup.myValue() > 6;
-		//		}
-		//	}
-		ko.extenders.validatable = function (observable, enable) {
-			if(enable && !observable.rules) {
-				observable.rules = ko.observableArray();
-			}
-		};
 		
-		ko.bindingHandlers.validationCore=  {
+	//Extender that makes the observable ready for validate. (Inserts an observableArray into the observable for the validation rules)
+	//Each rule in the rules array must have the following structure:
+	//	{
+	//		rule: <name of the rule>,
+	//		params: <rule parameters>,
+	//		message: <custom message if the validation fails>,
+	//		condition: <function returning  a boolean value, if the returned value is false, the validation will not apply>
+	//	}
+	//	{
+	//		rule: 'minlength',
+	//		params: 12,
+	//		message: 'This is too short!',
+	//		condition: function() { 
+	//			return myGroup.myValue() > 6;
+	//		}
+	//	}
+	ko.extenders.validatable = function (observable, enable) {
+		if(enable && !observable.rules) {
+			observable.rules = ko.observableArray();
+		}
+	};
+	
+	ko.bindingHandlers.validationCore=  {
 
-			update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-				var obs = valueAccessor();
-				if(obs.rules) {
-					var parsleyField = $( element).parsley();
-					each( obs.rules(), function(rule, key, list) {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+			var obs = valueAccessor();
+			if(obs.rules) {
+				var parsleyField = $( element).parsley();
+				util.each( obs.rules(), function(rule, key, list) {
 
-						var parsleyAttrName = "data-" + rule.rule;
-						var attr = $(element).attr(parsleyAttrName);
+					var parsleyAttrName = "data-" + rule.rule;
+					var attr = $(element).attr(parsleyAttrName);
 
-						//if the same rule is defined in the html do not override it
-						if (typeof attr == 'undefined' || attr === false) {
+					//if the same rule is defined in the html do not override it
+					if (typeof attr == 'undefined' || attr === false) {
 
-							if(rule.condition && !rule.condition(viewModel)) {
-								$(element).parsley('removeConstraint', rule.rule);
-							} else {
-								addParsleyConstraint(parsleyField, rule);
-								$(mainForm).parsley('addItem', element);
-							}
+						if(rule.condition && !rule.condition(viewModel)) {
+							$(element).parsley('removeConstraint', rule.rule);
+						} else {
+							addParsleyConstraint(parsleyField, rule);
+							$(mainForm).parsley('addItem', element);
 						}
-					});
-				}
+					}
+				});
 			}
-		};
-	}
+		}
+	};
+	
 
 	function addExtender(ruleName) {
 		if(!ko.extenders[ruleName]) {
@@ -126,15 +137,21 @@ ko.parsley = {};
 		observable.rules.push(rule);
 	}
 
-	this.init = function(_mainForm) {
-		mainForm = _mainForm;
-		initKoAddons();
+	var api = (function(){
+		return {
+			init: function(_mainForm) {
+				mainForm = _mainForm;
 
-		each( allowedRules, function(value, key, list) {
-			addExtender(value);
-		});
-		overrideBinding('value');
-		overrideBinding('checked');
-	};
+				util.each( allowedRules, function(value, key, list) {
+					addExtender(value);
+				});
+				overrideBinding('value');
+				overrideBinding('checked');
+			}
+		};
+		
+	}());
 
-}).apply(ko.parsley);
+	ko.utils.extend(parsley, api);
+
+}());
