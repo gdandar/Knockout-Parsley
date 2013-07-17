@@ -17,16 +17,20 @@ var viewModel = {
 
   //Add rule with custom message
   value2: ko.observable().extend({
-    type: "email",
-    message: "This is not a valid email address!"
+    type: { 
+      params: "email",
+      message: "This is not a valid email address!"
+    }
   });
 
   //Add rule with condition
   //The condition must be a function returning  a boolean value. If the returned value is false, the validation will not apply.
   value3: ko.observable.extend({
-    required: true,
-    condition: function(_viewModel) {
-      return _viewModel.value1() === 'Some Text';
+    required: {
+      params: true,
+      condition: function(_viewModel) {
+        return _viewModel.value1() === 'Some Text';
+      }
     }
   });  
 };

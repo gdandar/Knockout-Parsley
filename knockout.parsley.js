@@ -71,7 +71,7 @@
 					//if the same rule is defined in the html do not override it
 					if (typeof attr == 'undefined' || attr === false) {
 
-						if(rule.condition && !rule.condition(viewModel)) {
+						if(rule.condition && !rule.condition(bindingContext.$root)) {
 							$(element).parsley('removeConstraint', rule.rule);
 						} else {
 							addParsleyConstraint(parsleyField, rule);
