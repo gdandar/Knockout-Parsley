@@ -1,4 +1,4 @@
-/// Knockout Parsley validation plugin v0.1.0
+/// Knockout Parsley validation plugin v0.2.1
 /// (c) 2013 Gabor Dandar
 /// License: MIT (http://www.opensource.org/licenses/mit-license.php)
 (function(){
@@ -72,10 +72,11 @@
 					if (typeof attr == 'undefined' || attr === false) {
 
 						if(rule.condition && !rule.condition(bindingContext.$root)) {
-							$(element).parsley('removeConstraint', rule.rule);
+							if(parsleyField.constraints[rule.rule]) {
+								removeParsleyConstraint(parsleyField, rule);
+							}
 						} else {
 							addParsleyConstraint(parsleyField, rule);
-							$(mainForm).parsley('addItem', element);
 						}
 					}
 				});
@@ -114,6 +115,18 @@
 				parsleyField.Validator.messages[ name ] = rule.message;
 			}
 			parsleyField.addCustomConstraintMessage( name );
+		}
+
+		parsleyField.bindValidationEvents();
+	}
+
+	function removeParsleyConstraint(parsleyField, rule) {
+		var constraintName = rule.rule.toLowerCase();
+
+		delete parsleyField.constraints[ constraintName ];
+
+		if ( constraintName === 'required' ) {
+			parsleyField.isRequired = false;
 		}
 
 		parsleyField.bindValidationEvents();
