@@ -1,12 +1,31 @@
-/// Knockout Parsley validation plugin v0.2.1
+/// Knockout Parsley validation plugin v1.0
 /// (c) 2013 Gabor Dandar
 /// License: MIT (http://www.opensource.org/licenses/mit-license.php)
-(function(){
+(function(factory) {
+	if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
+        // CommonJS & Node
+        factory(require("knockout"), require("jquery"), exports);
+    } else if (typeof define === "function" && define.amd) {
+        // RequireJS
+        define(["knockout", "jquery", "exports"], factory);
+    } else {
+        // Simple script include
+        factory(ko, jQuery, ko.parsley = {});
+    }
+
+}(function(ko, $, exports){
+
+	if (typeof (ko) === undefined) { 
+		throw 'KnockoutJS not found!'; 
+	}
+	if (typeof ($().parsley) === undefined) { 
+		throw 'Parsley not found!'; 
+	}
+
 	var allowedRules = ['required','notblank', 'minlength', 'maxlength', 'rangelength', 'min', 'max', 'regexp', 'range',  'type'];
 	var mainForm;
 	
-	var parsley = {};
-	ko.parsley = parsley;
+	ko.parsley = exports;
 
 	var util = (function(){
 		return {
@@ -163,8 +182,8 @@
 			}
 		};
 		
-	}());
+	}());	
 
-	ko.utils.extend(parsley, api);
+	ko.utils.extend(exports, api);
 
-}());
+}));
