@@ -1,4 +1,4 @@
-/// Knockout Parsley validation plugin v1.0
+/// Knockout Parsley validation plugin v1.0.1
 /// (c) 2013 Gabor Dandar
 /// License: MIT (http://www.opensource.org/licenses/mit-license.php)
 (function(factory) {
@@ -171,8 +171,9 @@
 
 	var api = (function(){
 		return {
-			init: function(_mainForm) {
+			init: function(_mainForm) {				
 				mainForm = _mainForm;
+				$(mainForm).parsley();
 
 				util.each( allowedRules, function(value, key, list) {
 					addExtender(value);

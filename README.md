@@ -5,9 +5,6 @@ License: [MIT](http://www.opensource.org/licenses/mit-license.php)
 
 ##Usage
 ```javascript
-//Bind Parsley to a form
-$( '#main-form' ).parsley();
-
 //Init the plugin
 ko.parsley.init('#main-form');
 
@@ -24,7 +21,8 @@ var viewModel = {
   });
 
   //Add rule with condition
-  //The condition must be a function returning  a boolean value. If the returned value is false, the validation will not apply.
+  //The condition must be a function returning  a boolean value. 
+  //If the returned value is false, the validation will not apply.
   value3: ko.observable.extend({
     required: {
       params: true,
