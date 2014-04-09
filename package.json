@@ -1,9 +1,12 @@
 {
   "name": "knockout-parsley",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Parsley validation for Knockout JS.",
   "homepage": "https://github.com/gdandar/Knockout-Parsley",
   "dependencies": {
+    "knockout": "^3.1.0",
+    "jquery": "^2.1.0",
+    "parsleyjs": "^2.0.0-rc2"
   },
   "keywords": [
     "util",
@@ -31,10 +34,11 @@
   "main": "knockout.parsley.js",
   "scripts": {},
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.2.0",
-    "grunt-contrib-uglify": "~0.2.2"
+    "gulp": "^3.6.0",
+    "gulp-jshint": "^1.5.3",
+    "gulp-uglify": "^0.2.1",
+    "gulp-rename": "^1.2.0"
   },
   "readmeFilename": "README.md",
-  "_id": "Knockout-Parsley@1.0.1"
+  "_id": "Knockout-Parsley@2.0.0"
 }

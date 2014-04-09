@@ -1,13 +1,13 @@
-/// Knockout Parsley validation plugin v1.0.1
+/// Knockout Parsley validation plugin v2.0.0
 /// (c) 2013 Gabor Dandar
 /// License: MIT (http://www.opensource.org/licenses/mit-license.php)
 (function(factory) {
 	if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
         // CommonJS & Node
-        factory(require("knockout"), require("jquery"), exports);
+        factory(require("knockout"), require("jquery"), require("parslejs"), exports);
     } else if (typeof define === "function" && define.amd) {
         // RequireJS
-        define(["knockout", "jquery", "exports"], factory);
+        define(["knockout", "jquery", "parsleyjs", "exports"], factory);
     } else {
         // Simple script include
         factory(ko, jQuery, ko.parsley = {});
@@ -22,7 +22,7 @@
 		throw 'Parsley not found!'; 
 	}
 
-	var allowedRules = ['required','notblank', 'minlength', 'maxlength', 'rangelength', 'min', 'max', 'regexp', 'range',  'type'];
+	var allowedRules = ['required', 'minlength', 'maxlength', 'length', 'min', 'max', 'pattern', 'range',  'type'];
 	var mainForm;
 	
 	ko.parsley = exports;
@@ -91,11 +91,9 @@
 					if (typeof attr == 'undefined' || attr === false) {
 
 						if(rule.condition && !rule.condition(bindingContext.$root)) {
-							if(parsleyField.constraints[rule.rule]) {
-								removeParsleyConstraint(parsleyField, rule);
-							}
+							parsleyField.removeConstraint(rule.rule);
 						} else {
-							addParsleyConstraint(parsleyField, rule);
+							parsleyField.addConstraint(rule.rule, rule.params, undefined, false);
 						}
 					}
 				});
@@ -116,39 +114,6 @@
 				return target;
 			};
 		}
-	}
-
-	function addParsleyConstraint(parsleyField, rule) {
-		var name = rule.rule.toLowerCase();	
-		if ( 'function' === typeof parsleyField.Validator.validators[ name ] ) {
-			parsleyField.constraints[ name ] = {
-				name: name,
-				requirements: rule.params,
-				valid: null
-			};
-
-			if ( name === 'required' ) {
-				parsleyField.isRequired = true;
-			}
-			if(rule.message) {
-				parsleyField.Validator.messages[ name ] = rule.message;
-			}
-			parsleyField.addCustomConstraintMessage( name );
-		}
-
-		parsleyField.bindValidationEvents();
-	}
-
-	function removeParsleyConstraint(parsleyField, rule) {
-		var constraintName = rule.rule.toLowerCase();
-
-		delete parsleyField.constraints[ constraintName ];
-
-		if ( constraintName === 'required' ) {
-			parsleyField.isRequired = false;
-		}
-
-		parsleyField.bindValidationEvents();
 	}
 
 	function overrideBinding(handlerName) {
