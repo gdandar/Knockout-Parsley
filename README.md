@@ -12,8 +12,6 @@ var viewModel = {
   // Add a simple rule to the observable
   value1:  ko.observable().extend({ required: true }),
 
-  self:this,
-
   // Add rule with custom message
   value2: ko.observable().extend({
     type: { 

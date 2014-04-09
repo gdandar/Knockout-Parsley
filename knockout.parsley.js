@@ -1,4 +1,4 @@
-/// Knockout Parsley validation plugin v2.0.0
+/// Knockout Parsley validation plugin v2.0.1
 /// (c) 2013 Gabor Dandar
 /// License: MIT (http://www.opensource.org/licenses/mit-license.php)
 (function(factory) {
