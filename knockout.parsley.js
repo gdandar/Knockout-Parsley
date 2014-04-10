@@ -4,7 +4,7 @@
 (function(factory) {
 	if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
         // CommonJS & Node
-        factory(require("knockout"), require("jquery"), require("parslejs"), exports);
+        factory(require("knockout"), require("jquery"), require("parsleyjs"), exports);
     } else if (typeof define === "function" && define.amd) {
         // RequireJS
         define(["knockout", "jquery", "parsleyjs", "exports"], factory);
