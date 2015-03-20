@@ -1,6 +1,6 @@
 {
   "name": "knockout-parsley",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Parsley validation for Knockout JS.",
   "homepage": "https://github.com/gdandar/Knockout-Parsley",
   "dependencies": {
@@ -40,5 +40,5 @@
     "gulp-rename": "^1.2.0"
   },
   "readmeFilename": "README.md",
-  "_id": "Knockout-Parsley@2.0.2"
+  "_id": "Knockout-Parsley@2.0.3"
 }
